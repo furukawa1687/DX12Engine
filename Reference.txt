@@ -1,0 +1,8 @@
+
+参考書籍
+
+DirectX12の魔導書
+https://github.com/boxerprogrammer/directx12_samples
+
+ゲームプログラミングC++
+https://github.com/gameprogcpp/code
