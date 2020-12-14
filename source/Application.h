@@ -1,12 +1,9 @@
 ﻿//---------------------------------------------------------------------------
-//!	@file	debug.h
-//!	@brief	デバッグ関連
+//!	@file	Appliction.h
+//!	@brief	アプリケーション関連
 //---------------------------------------------------------------------------
 #pragma once
 
-class Dx12Wrapper;
-class PMDRenderer;
-class PMDActor;
 ///シングルトンクラス
 class Application
 {

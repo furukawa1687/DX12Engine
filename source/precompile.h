@@ -31,6 +31,11 @@
 #include <map>
 #include <unordered_map>
 #include <functional>
+#include <sstream>
+
+
+#include <mmsystem.h>
+#pragma comment(lib, "winmm.lib")
 
 //@}
 //--------------------------------------------------------------
@@ -46,6 +51,7 @@
 #include <DirectXMath.h>
 #include <DirectXTex/DirectXTex/DirectXTex.h>
 
+#include <d3dx12.h>
 #include "d3dx12.h"
 
 // DirectXツールキット
@@ -59,6 +65,18 @@
 using namespace hlslpp;
 
 #pragma warning(pop)
+
+//@}
+//--------------------------------------------------------------
+//!	@defgroup	imgui関連
+//--------------------------------------------------------------
+//@{
+
+#include "imgui/imgui.h"
+#include "imgui/imgui_impl_win32.h"
+#include "imgui/imgui_impl_dx12.h"
+
+
 //@}
 //--------------------------------------------------------------
 //!	@defgroup	アプリケーション

@@ -7,16 +7,14 @@ class PMDRenderer
 	friend PMDActor;
 private:
 	Dx12Wrapper& _dx12;
-	template<typename T>
-	using ComPtr = Microsoft::WRL::ComPtr<T>;
 
-	ComPtr< ID3D12PipelineState> _pipeline = nullptr;//PMD用パイプライン
-	ComPtr< ID3D12RootSignature> _rootSignature = nullptr;//PMD用ルートシグネチャ
+	com_ptr< ID3D12PipelineState> _pipeline = nullptr;//PMD用パイプライン
+	com_ptr< ID3D12RootSignature> _rootSignature = nullptr;//PMD用ルートシグネチャ
 
 	//PMD用共通テクスチャ(白、黒、グレイスケールグラデーション)
-	ComPtr<ID3D12Resource> _whiteTex = nullptr;
-	ComPtr<ID3D12Resource> _blackTex = nullptr;
-	ComPtr<ID3D12Resource> _gradTex = nullptr;
+	com_ptr<ID3D12Resource> _whiteTex = nullptr;
+	com_ptr<ID3D12Resource> _blackTex = nullptr;
+	com_ptr<ID3D12Resource> _gradTex = nullptr;
 
 	ID3D12Resource* CreateDefaultTexture(size_t width,size_t height);
 	ID3D12Resource* CreateWhiteTexture();//白テクスチャの生成

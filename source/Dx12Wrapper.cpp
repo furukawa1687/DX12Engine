@@ -1,6 +1,6 @@
 ﻿//---------------------------------------------------------------------------
-//!	@file	debug.cpp
-//!	@brief	デバッグ関連
+//!	@file	dx12wrapper.cpp
+//!	@brief	DirectX12ラッパー関数
 //---------------------------------------------------------------------------
 
 namespace {
@@ -271,6 +271,21 @@ Dx12Wrapper::CreateTextureFromFile(const char* texpath)
     return texbuff;
 }
 
+com_ptr<ID3D12DescriptorHeap> Dx12Wrapper::CreateDescriptorHeapForImgui()
+{
+    com_ptr<ID3D12DescriptorHeap> ret;
+    D3D12_DESCRIPTOR_HEAP_DESC    desc = {};
+    desc.Flags                         = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
+    desc.NodeMask                      = 0;
+    desc.NumDescriptors                = 1;
+    desc.Type                          = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
+    _dev->CreateDescriptorHeap(&desc, IID_PPV_ARGS(ret.ReleaseAndGetAddressOf()));
+    return ret;
+}
+com_ptr<ID3D12DescriptorHeap> Dx12Wrapper::GetHeapForImgui()
+{
+    return _heapForImgui;
+}
 HRESULT
 Dx12Wrapper::InitializeDXGIDevice()
 {
@@ -312,6 +327,13 @@ Dx12Wrapper::InitializeDXGIDevice()
             break;
         }
     }
+
+    //初期化時に呼び出す
+    _heapForImgui = CreateDescriptorHeapForImgui();
+    if(_heapForImgui == nullptr) {
+        return false;
+    }
+
     return result;
 }
 
@@ -395,8 +417,8 @@ Dx12Wrapper::CreateSceneView()
     _mappedSceneData = nullptr;                                                       //マップ先を示すポインタ
     result           = _sceneConstBuff->Map(0, nullptr, (void**)&_mappedSceneData);   //マップ
 
-    DirectX::XMFLOAT3 eye(0, 15, -15);
-    DirectX::XMFLOAT3 target(0, 15, 0);
+    DirectX::XMFLOAT3 eye(0, 15, -30);
+    DirectX::XMFLOAT3 target(0, 10, 0);
     DirectX::XMFLOAT3 up(0, 1, 0);
     _mappedSceneData->view = DirectX::XMMatrixLookAtLH(XMLoadFloat3(&eye), XMLoadFloat3(&target), XMLoadFloat3(&up));
     _mappedSceneData->proj = DirectX::XMMatrixPerspectiveFovLH(DirectX::XM_PIDIV4,                                                          //画角は45°
@@ -499,7 +521,7 @@ void Dx12Wrapper::BeginDraw()
     _cmdList->ClearDepthStencilView(dsvH, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
 
     //画面クリア
-    float clearColor[] = { 1.0f, 0.0f, 1.0f, 1.0f };   //白色
+    float clearColor[] = { 1.0f, 0.6f, 0.2f, 1.0f };   //白色
     _cmdList->ClearRenderTargetView(rtvH, clearColor, 0, nullptr);
 
     //ビューポート、シザー矩形のセット
@@ -522,6 +544,11 @@ void Dx12Wrapper::EndDraw()
                               &CD3DX12_RESOURCE_BARRIER::Transition(_backBuffers[bbIdx],
                                                                     D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT));
 
+    ExecuteCommand();
+}
+
+void Dx12Wrapper::ExecuteCommand()
+{
     //命令のクローズ
     _cmdList->Close();
 

@@ -1,5 +1,4 @@
 #include"BasicType.fx"
-
 Texture2D<float4> tex:register(t0);//0番スロットに設定されたテクスチャ(ベース)
 Texture2D<float4> sph:register(t1);//1番スロットに設定されたテクスチャ(乗算)
 Texture2D<float4> spa:register(t2);//2番スロットに設定されたテクスチャ(加算)
@@ -7,7 +6,6 @@ Texture2D<float4> toon:register(t3);//3番スロットに設定されたテクスチャ(トゥーン
 
 SamplerState smp:register(s0);//0番スロットに設定されたサンプラ
 SamplerState smpToon:register(s1);//1番スロットに設定されたサンプラ
-
 
 //定数バッファ1
 //マテリアル用
@@ -34,13 +32,13 @@ float4 BasicPS(BasicType input) : SV_TARGET{
 	float2 sphereMapUV = input.vnormal.xy;
 	sphereMapUV = (sphereMapUV + float2(1, -1)) * float2(0.5, -0.5);
 
+	float4 ambCol = float4(ambient * 0.6, 1);
 	float4 texColor = tex.Sample(smp, input.uv); //テクスチャカラー
-
-	return saturate(toonDif//輝度(トゥーン)
-		* diffuse//ディフューズ色
+	return saturate((toonDif//輝度(トゥーン)
+		* diffuse + ambCol * 0.5)//ディフューズ色
 		* texColor//テクスチャカラー
-		* sph.Sample(smp, sphereMapUV))//スフィアマップ(乗算)
-		+ saturate(spa.Sample(smp, sphereMapUV) * texColor//スフィアマップ(加算)
-		+ float4(specularB * specular.rgb, 1))//スペキュラー
-		+ float4(texColor * ambient * 0.5,1);//アンビエント(明るくなりすぎるので0.5にしてます)
+		* sph.Sample(smp, sphereMapUV)//スフィアマップ(乗算)
+		+ spa.Sample(smp, sphereMapUV)//スフィアマップ(加算)
+		+ float4(specularB * specular.rgb, 1)//スペキュラー
+		);
 }

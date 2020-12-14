@@ -107,6 +107,19 @@ config_project("hlsl++", "StaticLib")
 		path.join(SOURCE_PATH, "include/*.natvis"),
 	}
 	
+-----------------------------------------------------------------
+-- imgui
+-----------------------------------------------------------------
+config_project("imgui", "StaticLib")
+
+	local SOURCE_PATH = "../opensource/imgui"
+
+	files
+	{
+		path.join(SOURCE_PATH, "*.h"),
+		path.join(SOURCE_PATH, "*.cpp"),
+	}
+	
 --============================================================================
 -- プロジェクトファイル
 --============================================================================
@@ -160,4 +173,5 @@ config_project("DX12Engine", "WindowedApp")
 	links {
 		"DirectXTex",
 		"DirectXTK12",
+		"imgui",
 	}
