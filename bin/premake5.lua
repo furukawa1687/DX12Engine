@@ -120,6 +120,19 @@ config_project("imgui", "StaticLib")
 		path.join(SOURCE_PATH, "*.cpp"),
 	}
 	
+-----------------------------------------------------------------
+-- OpenFBX
+-----------------------------------------------------------------
+config_project("OpenFBX", "StaticLib")
+
+	local SOURCE_PATH = "../opensource/OpenFBX/src"
+
+	files
+	{
+		path.join(SOURCE_PATH, "**.h"),
+		path.join(SOURCE_PATH, "**.cpp"),
+	}
+	
 --============================================================================
 -- プロジェクトファイル
 --============================================================================
@@ -174,4 +187,5 @@ config_project("DX12Engine", "WindowedApp")
 		"DirectXTex",
 		"DirectXTK12",
 		"imgui",
+		"OpenFBX",
 	}
